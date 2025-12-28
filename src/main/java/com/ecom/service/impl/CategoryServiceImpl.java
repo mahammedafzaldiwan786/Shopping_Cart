@@ -64,6 +64,12 @@ public class CategoryServiceImpl implements CategoryService{
 		return categories;
 	}
 
+	@Override
+	public boolean existsByNameAndNotId(String name, int id) {
+		
+		return categoryRepository.existsByNameAndNotId(name, id);
+	}
+
 	
 	
 	

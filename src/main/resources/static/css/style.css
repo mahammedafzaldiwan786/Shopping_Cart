@@ -14,15 +14,16 @@
 
 /*my extra*/
 
-html, body {
-    height: 100%;
+html,
+body {
+	height: 100%;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 footer {
-    margin-top: auto;
+	margin-top: auto;
 }

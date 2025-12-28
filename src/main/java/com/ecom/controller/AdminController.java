@@ -88,46 +88,56 @@ public class AdminController {
 	@GetMapping("/category")
 	public String category(Model m) {
 
-		m.addAttribute("category", new Category());
-		m.addAttribute("categorys", categoryService.getAllCategory());
-		
-		return "admin/category";
+	    // Fresh object EVERY TIME
+	    m.addAttribute("categoryForm", new Category());
+
+	    m.addAttribute("categories", categoryService.getAllCategory());
+
+	    return "admin/category";
 	}
+
 
 	@PostMapping("/saveCategory")
-	public String saveCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file,
-			HttpSession session) throws IOException {
+	public String saveCategory(
+	        @ModelAttribute("categoryForm") Category category,
+	        @RequestParam("file") MultipartFile file,
+	        HttpSession session) throws IOException {
 
-		String imageName = file != null ? file.getOriginalFilename() : "default.jpg";
-		category.setImageName(imageName);
+	    // Defensive logging
+	    System.out.println("ID: " + category.getId());
+	    System.out.println("Name: " + category.getName());
 
-		Boolean existCategory = categoryService.existCategory(category.getName());
-		
+	    // Check duplicate ONLY for NEW category
+	    if (category.getId() == null && categoryService.existCategory(category.getName())) {
+	        session.setAttribute("errorMsg", "Category already exists!");
+	        return "redirect:/admin/category";
+	    }
 
-		if (existCategory) {
-			session.setAttribute("errorMsg", "Category already exist !");
-		} else {
-			Category saveCategory = categoryService.saveCategory(category);
+	    // Handle image
+	    String imageName = "default.jpg";
+	    if (file != null && !file.isEmpty()) {
+	        imageName = file.getOriginalFilename();
+	    }
+	    category.setImageName(imageName);
 
-			if (ObjectUtils.isEmpty(saveCategory)) {
-				session.setAttribute("errorMsg", "Not Saved, Internal Server Error !");
-			} else {
+	    Category saved = categoryService.saveCategory(category);
 
-				File saveFile = new ClassPathResource("static/img").getFile();
-				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
-						+ file.getOriginalFilename());
+	    if (saved == null) {
+	        session.setAttribute("errorMsg", "Not Saved! Server Error");
+	        return "redirect:/admin/category";
+	    }
 
-				// System.out.println(path);
+	    // Save image file
+	    if (file != null && !file.isEmpty()) {
+	        File saveDir = new ClassPathResource("static/img/category_img").getFile();
+	        Path path = Paths.get(saveDir.getAbsolutePath(), imageName);
+	        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+	    }
 
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-
-				session.setAttribute("succMsg", "Saved Successfully !");
-			}
-
-		}
-
-		return "redirect:/admin/category";
+	    session.setAttribute("succMsg", "Category Saved Successfully!");
+	    return "redirect:/admin/category";
 	}
+
 
 	@GetMapping("/deleteCategory/{id}")
 	public String deleteCategory(@PathVariable int id, HttpSession session) {
@@ -154,39 +164,47 @@ public class AdminController {
 	}
 
 	@PostMapping("/updateCategory")
-	public String updateCategory(@ModelAttribute Category category, @RequestParam("file") MultipartFile file,
-			HttpSession session) throws IOException {
+	public String updateCategory(
+	        @RequestParam int id,
+	        @RequestParam String name,
+	        @RequestParam boolean isActive,
+	        @RequestParam(required = false) MultipartFile file,
+	        HttpSession session) throws IOException {
 
-		Category oldcategory = categoryService.getCategoryById(category.getId());
-		String imageName = file.isEmpty() ? oldcategory.getImageName() : file.getOriginalFilename();
+	    Category category = categoryService.getCategoryById(id);
 
-		if (!ObjectUtils.isEmpty(category)) {
-			oldcategory.setName(category.getName());
-			oldcategory.setIsActive(category.getIsActive());
-			oldcategory.setImageName(imageName);
-		}
+	    if (category == null) {
+	        session.setAttribute("errorMsg", "Category not found!");
+	        return "redirect:/admin/category";
+	    }
 
-		Category updateCategory = categoryService.saveCategory(oldcategory);
+	    // duplicate check (ignore same record)
+	    Boolean exists = categoryService.existCategory(name);
+	    if (exists && !category.getName().equalsIgnoreCase(name)) {
+	        session.setAttribute("errorMsg", "Category already exists!");
+	        return "redirect:/admin/loadEditCategory/" + id;
+	    }
 
-		if (!ObjectUtils.isEmpty(updateCategory)) {
+	    // image logic
+	    String imageName = category.getImageName();
+	    if (file != null && !file.isEmpty()) {
+	        imageName = file.getOriginalFilename();
 
-			if (!file.isEmpty()) {
-				File saveFile = new ClassPathResource("static/img").getFile();
-				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "category_img" + File.separator
-						+ file.getOriginalFilename());
+	        File dir = new ClassPathResource("static/img/category_img").getFile();
+	        Path path = Paths.get(dir.getAbsolutePath(), imageName);
+	        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+	    }
 
-				// System.out.println(path);
+	    category.setName(name);
+	    category.setIsActive(isActive);
+	    category.setImageName(imageName);
 
-				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-			}
+	    categoryService.saveCategory(category);
 
-			session.setAttribute("succMsg", "category update successfully !");
-		} else {
-			session.setAttribute("errorMsg", "something wrong on server !");
-		}
-
-		return "redirect:/admin/loadEditCategory/" + category.getId();
+	    session.setAttribute("succMsg", "Category updated successfully!");
+	    return "redirect:/admin/loadEditCategory/" + id;
 	}
+
 
 	@PostMapping("/saveProduct")
 	public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,

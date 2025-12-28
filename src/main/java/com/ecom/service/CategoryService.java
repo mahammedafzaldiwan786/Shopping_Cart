@@ -9,6 +9,9 @@ public interface CategoryService {
 	public Category saveCategory(Category category);
 	
 	public Boolean existCategory(String name);
+	
+	boolean existsByNameAndNotId(String name, int id);
+
 
 	public List<Category> getAllCategory();
 

@@ -1,77 +1,86 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http:thymeleaf.org"
-	th:replace="~{base::layout(~{::section})}">
-<head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
-</head>
-<body>
-	<section>
-		<div class="container-fluid p-5 mt-5">
-			<div class="row">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{base::layout(~{::section})}">
 
-				<div class="col-md-3 offset-md-5">
-					<div class="card card-sh">
-						<div class="card-header  text-center">
+<section>
+    <div class="container-fluid p-5 mt-5">
+        <div class="row">
 
-							<p class="fs-4">Edit Category</p>
+            <div class="col-md-4 offset-md-4">
+                <div class="card card-sh">
 
-							<th:block th:if="${session.succMsg}">
-								<p class="text-success fw-bold">[[${session.succMsg}]]</p>
-								<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
-							</th:block>
+                    <div class="card-header text-center">
+                        <p class="fs-4">Edit Category</p>
 
-							<th:block th:if="${session.errorMsg}">
-								<p class="text-danger fw-bold">[[${session.errorMsg}]]</p>
-								<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
-							</th:block>
+                        <p th:if="${session.succMsg}" class="text-success fw-bold">
+                            [[${session.succMsg}]]
+                        </p>
 
-						</div>
-						<div class="card-body">
-							<form action="/admin/updateCategory" method="post"
-								enctype="multipart/form-data">
-								
-								<input type="hidden" name="id" th:value="${category.id}">
-								
-								<div class="mb-3">
-									<label>Enter Category</label> <input type="text"
-										class="form-control" name="name" th:value="${category.name}">
-								</div>
+                        <p th:if="${session.errorMsg}" class="text-danger fw-bold">
+                            [[${session.errorMsg}]]
+                        </p>
+                    </div>
 
-								<div class="mb-3">
-									<label>Status</label>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="isActive"
-											id="radioDefault1" th:checked="${category.isActive==true}" value="true"> <label
-											class="form-check-label" for="radioDefault1"> Active
-										</label>
-									</div>
-									<div class="form-check">
-										<input class="form-check-input" type="radio" name="isActive"
-											id="radioDefault2" value="false"  th:checked="${category.isActive==false}" > <label
-											class="form-check-label" for="radioDefault2">
-											Inactive </label>
-									</div>
-								</div>
+                    <div class="card-body">
+                        <form th:action="@{/admin/updateCategory}"
+                              method="post"
+                              enctype="multipart/form-data">
 
-								<div class="mb-3">
-									<label>Upload Image</label> <input type="file"
-										class="form-control" name="file">
-								</div>
-								
-								<img th:src="@{'/img/category_img/'+${category.imageName}}"
-											width="150px" height="150px">
+                            <!-- ID -->
+                            <input type="hidden" name="id" th:value="${category.id}">
 
-								<button class="btn btn-primary col-md-12 mt-2">Update</button>
+                            <!-- NAME -->
+                            <div class="mb-3">
+                                <label>Category Name</label>
+                                <input type="text"
+                                       class="form-control"
+                                       name="name"
+                                       th:value="${category.name}"
+                                       required>
+                            </div>
 
-							</form>
-						</div>
-					</div>
-				</div>
+                            <!-- STATUS -->
+                            <div class="mb-3">
+                                <label>Status</label>
 
-				
-			</div>
-		</div>
-	</section>
-</body>
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="isActive"
+                                           value="true"
+                                           th:checked="${category.isActive}">
+                                    <label class="form-check-label">Active</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input"
+                                           type="radio"
+                                           name="isActive"
+                                           value="false"
+                                           th:checked="${!category.isActive}">
+                                    <label class="form-check-label">Inactive</label>
+                                </div>
+                            </div>
+
+                            <!-- IMAGE -->
+                            <div class="mb-3">
+                                <label>Upload Image</label>
+                                <input type="file" class="form-control" name="file">
+                            </div>
+
+                            <img th:src="@{'/img/category_img/' + ${category.imageName}}"
+                                 width="150" height="150" class="mb-3">
+
+                            <button class="btn btn-primary col-md-12">
+                                Update Category
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
 </html>
