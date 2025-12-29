@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+
+	<section>
+
+		<div class="container mt-5 p-5">
+
+			<div class="row">
+				<p class="text-center fs-3">My Orders</p>
+
+				<th:block th:if="${session.succMsg}">
+					<p class="text-success fw-bold text-center">[[${session.succMsg}]]</p>
+					<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+				<div class="col-md-12">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th scope="col">Order ID</th>
+								<th scope="col">Date</th>
+								<th scope="col">Product Details</th>
+								<th scope="col">Price</th>
+								<th scope="col">Payment Mode</th>
+								<th scope="col">Status</th>
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="order:${orders}">
+								<th scope="row">[[${order.orderId}]]</th>
+								<td>[[${order.orderDate}]]</td>
+								<td>[[${order.product.title}]]</td>
+								<td>Quantity : [[${order.quantity}]] <br> Price :
+									[[${order.price}]] <br> Total Price : [[${order.quantity *
+									order.price}]]
+								</td>
+								<td>[[${order.paymentType}]]</td>
+								<td>[[${order.status}]]</td>
+								<td><th:block th:if="${order.status!='Cancelled'}">
+										<a
+											th:href="@{'/user/update-status?id='+ ${order.id}+ '&st=6'}"
+											class="btn btn-sm btn-danger">Cancel</a>
+									</th:block> <th:block th:unless="${order.status!='Cancelled'}">
+										<a href="#" class="btn btn-sm btn-danger disabled">Cancel</a>
+									</th:block></td>
+
+
+							</tr>
+						</tbody>
+					</table>
+					<p>Note: COD = Cash On Delivery , Online = Online Payment</p>
+				</div>
+
+			</div>
+
+
+		</div>
+
+	</section>
+
+	<h1>Demo page</h1>
+</body>
+
+</html>

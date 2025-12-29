@@ -16,11 +16,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.ecom.model.Cart;
 import com.ecom.model.Category;
 import com.ecom.model.OrderRequest;
+import com.ecom.model.ProductOrder;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
 import com.ecom.service.OrderService;
 import com.ecom.service.UserService;
+import com.ecom.util.OrderStatus;
+
 import jakarta.servlet.http.HttpSession;
 
 @Controller
@@ -136,6 +139,42 @@ public class UserController {
 	@GetMapping("/success")
 	public String loadSuccess() {
 		return "/user/success";
+	}
+	
+	@GetMapping("/user-orders")
+	public String myOrders(Model model,Principal p) {
+		
+		UserDtls loginUser = getLoggedInUserDetails(p);
+		
+		List<ProductOrder> orders = orderService.getOrdersByUserId(loginUser.getId());
+		
+		model.addAttribute("orders", orders);
+		
+		return "/user/my_orders";
+	}
+	
+	@GetMapping("/update-status")
+	public String updateOrderStatus(@RequestParam Integer id,@RequestParam Integer st,HttpSession session) {
+		
+		OrderStatus[] values = OrderStatus.values();
+		String status = null;
+		
+		for(OrderStatus orderSt : values) {
+			if(orderSt.getId().equals(st)) {
+				status = orderSt.getName();
+			}
+		}
+		
+		
+		Boolean updateOrderStatus = orderService.updateOrderStatus(id, status);
+		
+		if(updateOrderStatus) {
+			session.setAttribute("succMsg", "Status updated !");
+		}else {
+			session.setAttribute("errorMsg", "Status Not updated !");
+		}
+		
+		return "redirect:/user/user-orders";
 	}
 	
 
