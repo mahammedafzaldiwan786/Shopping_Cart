@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
+
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+
+<body>
+
+	<section>
+
+		<div class="container-fluid mt-5 p-5">
+
+
+
+			<div class="row">
+				<p class="text-center fs-3">All Orders</p>
+				<hr>
+
+				<th:block th:if="${session.succMsg}">
+					<p class="text-success fw-bold text-center">[[${session.succMsg}]]</p>
+					<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<th:block th:if="${session.errorMsg}">
+					<p class="text-danger fw-bold text-center">[[${session.errorMsg}]]</p>
+					<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
+				</th:block>
+
+				<div class="row">
+					<div class="col-md-3 p-3">
+						<form action="">
+							<div class="input-group">
+								<input type="text" class="form-control" name="ch"
+									placeholder="Enter Order ID">
+								<button class="btn btn-primary ms-3">
+									<i class="fa-solid fa-magnifying-glass"></i> Search
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="col-md-12 p-3">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th scope="col">Order ID</th>
+								<th scope="col">Deliver Details ID</th>
+								<th scope="col">Date</th>
+								<th scope="col">Product Details</th>
+								<th scope="col">Price</th>
+								<th scope="col">Payment</th>
+								<th scope="col">Status</th>
+								<th scope="col">Action</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="order:${orders}">
+								<th scope="row">[[${order.orderId}]]</th>
+								<td>Name : [[${order.orderAddress.firstName+ ' '
+									+order.orderAddress.lastName}]] <br> Email :
+									[[${order.orderAddress.email}]] <br> Mobile No. :
+									[[${order.orderAddress.mobileNo}]] <br> Address :
+									[[${order.orderAddress.address}]] <br> City :
+									[[${order.orderAddress.city}]] <br> State :
+									[[${order.orderAddress.state}]] -
+									[[${order.orderAddress.pincode}]]
+								</td>
+								<td>[[${order.orderDate}]]</td>
+								<td>[[${order.product.title}]]</td>
+								<td>Quantity : [[${order.quantity}]] <br> Price :
+									[[${order.price}]] <br> Total Price : [[${order.quantity *
+									order.price}]]
+								</td>
+								<td>[[${order.paymentType}]]</td>
+								<td>[[${order.status}]]</td>
+								<td>
+
+									<form action="/admin/update-order-status" method="post">
+										<div class="row">
+											<div class="col">
+
+												<select class="form-control" name="st">
+
+													<option>--select--</option>
+													<option value="1">In Progress</option>
+													<option value="2">Order Received</option>
+													<option value="3">Order Packed</option>
+													<option value="4">Out for Delivery</option>
+													<option value="5">Delivered</option>
+													<option value="6">Cancelled</option>
+
+												</select>
+											</div>
+											<input th:value="${order.id}" name="id" type="hidden">
+											<div class="col">
+
+												<th:block
+													th:if="${order.status=='Cancelled' || order.status=='Delivered' }">
+													<button class="btn btn-primary btn-sm col disabled">Update</button>
+												</th:block>
+												<th:block
+													th:unless="${order.status=='Cancelled' || order.status=='Delivered' }">
+													<button class="btn btn-primary btn-sm col">Update</button>
+												</th:block>
+
+
+
+											</div>
+
+										</div>
+									</form>
+
+
+								</td>
+
+
+							</tr>
+						</tbody>
+					</table>
+					<p>Note: COD = Cash On Delivery , Online = Online Payment</p>
+				</div>
+
+			</div>
+			<div class="row">
+				<div class="col-md-3 p-3">
+
+					<a href="/admin/" class="btn btn-sm btn-primary"><i
+						class="fa-solid fa-arrow-left"></i> Back</a>
+				</div>
+			</div>
+
+		</div>
+
+	</section>
+
+	<h1>Demo page</h1>
+</body>
+
+</html>

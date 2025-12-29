@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http:thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<html lang="en" xmlns:th="http:thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Insert title here</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 </head>
 
 <body>
@@ -27,13 +28,14 @@
 
 						</div>
 						<div class="card-body">
-							<form action="/admin/updateProduct" method="post" enctype="multipart/form-data">
+							<form action="/admin/updateProduct" method="post"
+								enctype="multipart/form-data">
 
 								<input type="hidden" name="id" th:value="${product.id}">
 
 								<div class="mb-3">
-									<label>Enter Title</label>
-									<input type="text" name="title" class="form-control" th:value="${product.title}">
+									<label>Enter Title</label> <input type="text" name="title"
+										class="form-control" th:value="${product.title}">
 								</div>
 
 								<div class="mb-3">
@@ -45,17 +47,16 @@
 								<div class="row">
 
 									<div class="mb-3 col">
-										<label>Category</label>
-										<select class="form-control" name="category">
+										<label>Category</label> <select class="form-control"
+											name="category">
 											<option>[[${product.category}]]</option>
 											<option th:each="c:${categories}">[[${c.name}]]</option>
 										</select>
 									</div>
 
 									<div class="mb-3 col">
-										<label>Enter Price</label>
-										<input type="number" name="price" class="form-control"
-											th:value="${product.price}">
+										<label>Enter Price</label> <input type="number" name="price"
+											class="form-control" th:value="${product.price}">
 									</div>
 
 								</div>
@@ -63,14 +64,13 @@
 								<div class="row">
 
 									<div class="mb-3 col">
-										<label>Discount</label>
-										<input type="number" name="discount" class="form-control"
-											th:value="${product.discount}">
+										<label>Discount</label> <input type="number" name="discount"
+											class="form-control" th:value="${product.discount}">
 									</div>
 
 									<div class="mb-3 col">
-										<label>Discount Price</label>
-										<input type="number" class="form-control" name="discountPrice"
+										<label>Discount Price</label> <input type="number"
+											class="form-control" name="discountPrice"
 											th:value="${product.discountPrice}" readonly="readonly">
 									</div>
 
@@ -79,14 +79,15 @@
 								<div class="mb-3">
 									<label>Status</label>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="isActive" id="radioDefault1"
-											th:checked="${product.isActive==true}" value="true"> <label
-											class="form-check-label" for="radioDefault1"> Active
-										</label>
+										<input class="form-check-input" type="radio" name="isActive"
+											id="radioDefault1" th:checked="${product.isActive==true}"
+											value="true"> <label class="form-check-label"
+											for="radioDefault1"> Active </label>
 									</div>
 									<div class="form-check">
-										<input class="form-check-input" type="radio" name="isActive" id="radioDefault2"
-											value="false" th:checked="${product.isActive==false}"> <label
+										<input class="form-check-input" type="radio" name="isActive"
+											id="radioDefault2" value="false"
+											th:checked="${product.isActive==false}"> <label
 											class="form-check-label" for="radioDefault2">
 											Inactive </label>
 									</div>
@@ -94,23 +95,30 @@
 
 								<div class="row">
 									<div class="mb-3 col">
-										<label>Enter Stock</label>
-										<input type="text" name="stock" class="form-control"
-											th:value="${product.stock}">
+										<label>Enter Stock</label> <input type="text" name="stock"
+											class="form-control" th:value="${product.stock}">
 									</div>
 									<div class="mb-3 col">
-										<label>Upload Image</label>
-										<input type="file" name="file" class="form-control">
+										<label>Upload Image</label> <input type="file" name="file"
+											class="form-control">
 									</div>
 									<div class="mt-1 mb-1">
-										<img th:src="@{'/img/product_img/'+${product.image}}" width="100px"
-											height="100px">
+										<img th:src="@{'/img/product_img/'+${product.image}}"
+											width="100px" height="100px">
 									</div>
 								</div>
 								<button class="btn btn-primary col-md-12">Update</button>
 							</form>
 						</div>
 					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-3 p-3">
+
+					<a href="/admin/products" class="btn btn-sm btn-primary"><i
+						class="fa-solid fa-arrow-left"></i> Back</a>
 				</div>
 			</div>
 		</div>

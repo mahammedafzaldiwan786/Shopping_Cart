@@ -5,19 +5,18 @@ import java.util.List;
 import com.ecom.model.Category;
 
 public interface CategoryService {
-	
-	public Category saveCategory(Category category);
-	
-	public Boolean existCategory(String name);
-	
-	boolean existsByNameAndNotId(String name, int id);
 
+	public Category saveCategory(Category category);
+
+	public Boolean existCategory(String name);
+
+	boolean existsByNameAndNotId(String name, int id);
 
 	public List<Category> getAllCategory();
 
 	public Boolean deleteCategory(int id);
-	
+
 	public Category getCategoryById(int id);
-	
+
 	public List<Category> getAllActiveCategory();
 }

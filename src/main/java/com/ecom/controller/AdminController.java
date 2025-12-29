@@ -24,11 +24,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ecom.model.Category;
 import com.ecom.model.Product;
+import com.ecom.model.ProductOrder;
 import com.ecom.model.UserDtls;
 import com.ecom.service.CartService;
 import com.ecom.service.CategoryService;
+import com.ecom.service.OrderService;
 import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
+import com.ecom.util.OrderStatus;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -41,33 +44,33 @@ public class AdminController {
 
 	@Autowired
 	private ProductService productService;
-	
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CartService cartService;
-	
-	
+
+	@Autowired
+	private OrderService orderService;
+
 	@ModelAttribute
-	public void getUserDetails(Principal p,Model m) {
-		
-		if(p!=null) {
+	public void getUserDetails(Principal p, Model m) {
+
+		if (p != null) {
 			String email = p.getName();
-			
+
 			UserDtls userDtls = userService.getUserByEmail(email);
-			
+
 			m.addAttribute("user", userDtls);
-			
+
 			Integer countCart = cartService.getCountCart(userDtls.getId());
 			m.addAttribute("countCart", countCart);
 		}
-		
-		List <Category> allActiveCategory = categoryService.getAllActiveCategory();
+
+		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
 		m.addAttribute("category", allActiveCategory);
-		
-		
+
 	}
 
 	@GetMapping("/")
@@ -88,56 +91,52 @@ public class AdminController {
 	@GetMapping("/category")
 	public String category(Model m) {
 
-	    // Fresh object EVERY TIME
-	    m.addAttribute("categoryForm", new Category());
+		// Fresh object EVERY TIME
+		m.addAttribute("categoryForm", new Category());
 
-	    m.addAttribute("categories", categoryService.getAllCategory());
+		m.addAttribute("categories", categoryService.getAllCategory());
 
-	    return "admin/category";
+		return "admin/category";
 	}
-
 
 	@PostMapping("/saveCategory")
-	public String saveCategory(
-	        @ModelAttribute("categoryForm") Category category,
-	        @RequestParam("file") MultipartFile file,
-	        HttpSession session) throws IOException {
+	public String saveCategory(@ModelAttribute("categoryForm") Category category,
+			@RequestParam("file") MultipartFile file, HttpSession session) throws IOException {
 
-	    // Defensive logging
-	    System.out.println("ID: " + category.getId());
-	    System.out.println("Name: " + category.getName());
+		// Defensive logging
+		System.out.println("ID: " + category.getId());
+		System.out.println("Name: " + category.getName());
 
-	    // Check duplicate ONLY for NEW category
-	    if (category.getId() == null && categoryService.existCategory(category.getName())) {
-	        session.setAttribute("errorMsg", "Category already exists!");
-	        return "redirect:/admin/category";
-	    }
+		// Check duplicate ONLY for NEW category
+		if (category.getId() == null && categoryService.existCategory(category.getName())) {
+			session.setAttribute("errorMsg", "Category already exists!");
+			return "redirect:/admin/category";
+		}
 
-	    // Handle image
-	    String imageName = "default.jpg";
-	    if (file != null && !file.isEmpty()) {
-	        imageName = file.getOriginalFilename();
-	    }
-	    category.setImageName(imageName);
+		// Handle image
+		String imageName = "default.jpg";
+		if (file != null && !file.isEmpty()) {
+			imageName = file.getOriginalFilename();
+		}
+		category.setImageName(imageName);
 
-	    Category saved = categoryService.saveCategory(category);
+		Category saved = categoryService.saveCategory(category);
 
-	    if (saved == null) {
-	        session.setAttribute("errorMsg", "Not Saved! Server Error");
-	        return "redirect:/admin/category";
-	    }
+		if (saved == null) {
+			session.setAttribute("errorMsg", "Not Saved! Server Error");
+			return "redirect:/admin/category";
+		}
 
-	    // Save image file
-	    if (file != null && !file.isEmpty()) {
-	        File saveDir = new ClassPathResource("static/img/category_img").getFile();
-	        Path path = Paths.get(saveDir.getAbsolutePath(), imageName);
-	        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-	    }
+		// Save image file
+		if (file != null && !file.isEmpty()) {
+			File saveDir = new ClassPathResource("static/img/category_img").getFile();
+			Path path = Paths.get(saveDir.getAbsolutePath(), imageName);
+			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		}
 
-	    session.setAttribute("succMsg", "Category Saved Successfully!");
-	    return "redirect:/admin/category";
+		session.setAttribute("succMsg", "Category Saved Successfully!");
+		return "redirect:/admin/category";
 	}
-
 
 	@GetMapping("/deleteCategory/{id}")
 	public String deleteCategory(@PathVariable int id, HttpSession session) {
@@ -155,8 +154,6 @@ public class AdminController {
 
 	@GetMapping("/loadEditCategory/{id}")
 	public String loadEditCategory(@PathVariable int id, Model m) {
-		
-		
 
 		m.addAttribute("category", categoryService.getCategoryById(id));
 
@@ -164,47 +161,42 @@ public class AdminController {
 	}
 
 	@PostMapping("/updateCategory")
-	public String updateCategory(
-	        @RequestParam int id,
-	        @RequestParam String name,
-	        @RequestParam boolean isActive,
-	        @RequestParam(required = false) MultipartFile file,
-	        HttpSession session) throws IOException {
+	public String updateCategory(@RequestParam int id, @RequestParam String name, @RequestParam boolean isActive,
+			@RequestParam(required = false) MultipartFile file, HttpSession session) throws IOException {
 
-	    Category category = categoryService.getCategoryById(id);
+		Category category = categoryService.getCategoryById(id);
 
-	    if (category == null) {
-	        session.setAttribute("errorMsg", "Category not found!");
-	        return "redirect:/admin/category";
-	    }
+		if (category == null) {
+			session.setAttribute("errorMsg", "Category not found!");
+			return "redirect:/admin/category";
+		}
 
-	    // duplicate check (ignore same record)
-	    Boolean exists = categoryService.existCategory(name);
-	    if (exists && !category.getName().equalsIgnoreCase(name)) {
-	        session.setAttribute("errorMsg", "Category already exists!");
-	        return "redirect:/admin/loadEditCategory/" + id;
-	    }
+		// duplicate check (ignore same record)
+		Boolean exists = categoryService.existCategory(name);
+		if (exists && !category.getName().equalsIgnoreCase(name)) {
+			session.setAttribute("errorMsg", "Category already exists!");
+			return "redirect:/admin/loadEditCategory/" + id;
+		}
 
-	    // image logic
-	    String imageName = category.getImageName();
-	    if (file != null && !file.isEmpty()) {
-	        imageName = file.getOriginalFilename();
+		// image logic
+		String imageName = category.getImageName();
+		if (file != null && !file.isEmpty()) {
+			imageName = file.getOriginalFilename();
 
-	        File dir = new ClassPathResource("static/img/category_img").getFile();
-	        Path path = Paths.get(dir.getAbsolutePath(), imageName);
-	        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-	    }
+			File dir = new ClassPathResource("static/img/category_img").getFile();
+			Path path = Paths.get(dir.getAbsolutePath(), imageName);
+			Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		}
 
-	    category.setName(name);
-	    category.setIsActive(isActive);
-	    category.setImageName(imageName);
+		category.setName(name);
+		category.setIsActive(isActive);
+		category.setImageName(imageName);
 
-	    categoryService.saveCategory(category);
+		categoryService.saveCategory(category);
 
-	    session.setAttribute("succMsg", "Category updated successfully!");
-	    return "redirect:/admin/loadEditCategory/" + id;
+		session.setAttribute("succMsg", "Category updated successfully!");
+		return "redirect:/admin/loadEditCategory/" + id;
 	}
-
 
 	@PostMapping("/saveProduct")
 	public String saveProduct(@ModelAttribute Product product, @RequestParam("file") MultipartFile image,
@@ -290,30 +282,62 @@ public class AdminController {
 		}
 		return "redirect:/admin/editProduct/" + product.getId();
 	}
-	
+
 	@GetMapping("/users")
 	public String users(Model m) {
-		
-		List <UserDtls> users = userService.getAllUsers("ROLE_USER");
+
+		List<UserDtls> users = userService.getAllUsers("ROLE_USER");
 		m.addAttribute("users", users);
-		
-		
+
 		return "/admin/users";
 	}
-	
-	@GetMapping("/updateStatus")
-	public String updateUserAccountStatus(@RequestParam Integer id,@RequestParam Boolean status,HttpSession session) {
-		
-		Boolean updateStatus = userService.updateAccountStatus(id,status);
-		
-		if(updateStatus) {
-			session.setAttribute("succMsg", "Account status Updated !");
-		}else {
 
-			session.setAttribute("errorMsg","something wrong on server !");
+	@GetMapping("/updateStatus")
+	public String updateUserAccountStatus(@RequestParam Integer id, @RequestParam Boolean status, HttpSession session) {
+
+		Boolean updateStatus = userService.updateAccountStatus(id, status);
+
+		if (updateStatus) {
+			session.setAttribute("succMsg", "Account status Updated !");
+		} else {
+
+			session.setAttribute("errorMsg", "something wrong on server !");
 		}
-		
+
 		return "redirect:/admin/users";
 	}
-	
+
+	@GetMapping("/orders")
+	public String getAllOrders(Model model) {
+
+		List<ProductOrder> allOrders = orderService.getAllOrders();
+
+		model.addAttribute("orders", allOrders);
+
+		return "/admin/orders";
+	}
+
+	@PostMapping("/update-order-status")
+	public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session) {
+
+		OrderStatus[] values = OrderStatus.values();
+		String status = null;
+
+		for (OrderStatus orderSt : values) {
+			if (orderSt.getId().equals(st)) {
+				status = orderSt.getName();
+			}
+		}
+
+		Boolean updateOrderStatus = orderService.updateOrderStatus(id, status);
+
+		if (updateOrderStatus) {
+			session.setAttribute("succMsg", "Status updated !");
+		} else {
+			session.setAttribute("errorMsg", "Status Not updated !");
+		}
+
+		return "redirect:/admin/orders";
+	}
+
 }

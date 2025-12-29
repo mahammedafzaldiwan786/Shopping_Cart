@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http:thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<html lang="en" xmlns:th="http:thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Insert title here</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 </head>
 
 <body>
@@ -21,32 +22,32 @@
 						<div class="card-header">
 							<p class="fs-4 text-center">Login</p>
 
-							<div th:if="${param.error}" class="alert alert-danger text-center">
-								[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]
-							</div>
+							<div th:if="${param.error}"
+								class="alert alert-danger text-center">
+								[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</div>
 
 							<div th:if="${param.logout}" class="alert alert-success">
-								Logout Successfully !
-							</div>
+								Logout Successfully !</div>
 
 						</div>
 						<div class="card-body">
 							<form action="/login" method="post">
 								<div class="mb-3">
-									<label class="form-label">Email</label>
-									<input class="form-control" name="username" type="email">
+									<label class="form-label">Email</label> <input
+										class="form-control" name="username" type="email">
 								</div>
 								<div class="mb-3">
-									<label class="form-label">Password</label>
-									<input class="form-control" name="password" type="password">
+									<label class="form-label">Password</label> <input
+										class="form-control" name="password" type="password">
 								</div>
-								<button type="submit" class="btn bg-primary text-white col-md-12">Login</button>
+								<button type="submit"
+									class="btn bg-primary text-white col-md-12">Login</button>
 							</form>
 						</div>
 						<div class="card-footer text-center">
-							<a href="/forgot-password" class="text-decoration-none">Forget Password</a><br>
-							Don't have account?
-							<a href="/register" class="text-decoration-none">Create Account</a>
+							<a href="/forgot-password" class="text-decoration-none">Forget
+								Password</a><br> Don't have account? <a href="/register"
+								class="text-decoration-none">Create Account</a>
 						</div>
 					</div>
 				</div>

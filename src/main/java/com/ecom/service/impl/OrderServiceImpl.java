@@ -19,25 +19,23 @@ import com.ecom.service.OrderService;
 import com.ecom.util.OrderStatus;
 
 @Service
-public class OrderServiceImpl implements OrderService{
-	
+public class OrderServiceImpl implements OrderService {
+
 	@Autowired
 	private ProductOrderRepository orderRepository;
-	
+
 	@Autowired
 	private CartRepository cartRepository;
-
-
 
 	@Override
 	public void saveOrder(Integer userId, OrderRequest orderRequest) {
 
 		List<Cart> carts = cartRepository.findByUserId(userId);
-		
-		for(Cart cart:carts) {
-			
+
+		for (Cart cart : carts) {
+
 			ProductOrder order = new ProductOrder();
-			
+
 			order.setOrderId(UUID.randomUUID().toString());
 			order.setOrderDate(LocalDate.now());
 			order.setProduct(cart.getProduct());
@@ -46,7 +44,7 @@ public class OrderServiceImpl implements OrderService{
 			order.setUser(cart.getUser());
 			order.setStatus(OrderStatus.In_PROGRESS.getName());
 			order.setPaymentType(orderRequest.getPaymentType());
-			
+
 			OrderAddress address = new OrderAddress();
 			address.setFirstName(orderRequest.getFirstName());
 			address.setLastName(orderRequest.getLastName());
@@ -56,17 +54,13 @@ public class OrderServiceImpl implements OrderService{
 			address.setCity(orderRequest.getCity());
 			address.setState(orderRequest.getState());
 			address.setPincode(orderRequest.getPincode());
-			
-			
+
 			order.setOrderAddress(address);
-			
+
 			orderRepository.save(order);
 		}
-		
-	
+
 	}
-
-
 
 	@Override
 	public List<ProductOrder> getOrdersByUserId(Integer userId) {
@@ -74,22 +68,24 @@ public class OrderServiceImpl implements OrderService{
 		return orders;
 	}
 
-
-
 	@Override
 	public Boolean updateOrderStatus(Integer id, String status) {
 		Optional<ProductOrder> findById = orderRepository.findById(id);
-		
-		if(findById.isPresent()) {
+
+		if (findById.isPresent()) {
 			ProductOrder productOrder = findById.get();
 			productOrder.setStatus(status);
 			orderRepository.save(productOrder);
 			return true;
 		}
-		
+
 		return false;
 	}
 
-	
+	@Override
+	public List<ProductOrder> getAllOrders() {
+
+		return orderRepository.findAll();
+	}
 
 }

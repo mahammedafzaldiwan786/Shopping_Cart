@@ -18,42 +18,38 @@ import lombok.Setter;
 @Entity
 public class UserDtls {
 
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
-	private String name;
-	
-	private String mobileNumber;
-	
-	private String email;
-	
-	private String address;
-	
-	private String city;
-	
-	private String state;
-	
-	private String pincode;
-	
-	private String password; 
-	
-	private String profileImage;
-	
-	private String role;
-	
-	private Boolean isEnabled;
-	
-	private Boolean AccountNonLocked;
-	
-	private Integer failedAttempt;
-	
-	private Date lockTime;
-	
-	private String resetToken;
 
-		
-	
+	private String name;
+
+	private String mobileNumber;
+
+	private String email;
+
+	private String address;
+
+	private String city;
+
+	private String state;
+
+	private String pincode;
+
+	private String password;
+
+	private String profileImage;
+
+	private String role;
+
+	private Boolean isEnabled;
+
+	private Boolean AccountNonLocked;
+
+	private Integer failedAttempt;
+
+	private Date lockTime;
+
+	private String resetToken;
 
 }

@@ -39,197 +39,186 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class HomeController {
-	
+
 	@Autowired
 	private CategoryService categoryService;
-	
+
 	@Autowired
 	private ProductService productService;
-	
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private CartService cartService;
-	
+
 	@Autowired
 	private CommonUtil commonUtil;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
-	
-	
+
 	@ModelAttribute
-	public void getUserDetails(Principal p,Model m) {
-		
-		if(p!=null) {
+	public void getUserDetails(Principal p, Model m) {
+
+		if (p != null) {
 			String email = p.getName();
-			
+
 			UserDtls userDtls = userService.getUserByEmail(email);
 			m.addAttribute("user", userDtls);
-			
+
 			Integer countCart = cartService.getCountCart(userDtls.getId());
 			m.addAttribute("countCart", countCart);
 		}
-		
-		List <Category> allActiveCategory = categoryService.getAllActiveCategory();
+
+		List<Category> allActiveCategory = categoryService.getAllActiveCategory();
 		m.addAttribute("category", allActiveCategory);
-		
+
 	}
-	
-	
+
 	@GetMapping("/")
 	public String index() {
-		
-		
+
 		return "index";
 	}
-	
-	
+
 	@GetMapping("/signin")
 	public String login() {
-		
-		
+
 		return "login";
 	}
-	
-	
+
 	@GetMapping("/register")
 	public String register() {
-		
-		
+
 		return "register";
 	}
-	
-	
+
 	@GetMapping("/products")
-	public String products(Model m,@RequestParam(value = "category",defaultValue = "") String category) {
-		
-	 	 List<Category> categories = categoryService.getAllActiveCategory();
-	 	 
-	 	 List<Product> products = productService.getAllActiveProducts(category);
-		
-	 	 m.addAttribute("categories", categories);
-	 	 m.addAttribute("products", products);
-	 	 m.addAttribute("paramValue", category);
-	 	
-	 	 
+	public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category) {
+
+		List<Category> categories = categoryService.getAllActiveCategory();
+
+		List<Product> products = productService.getAllActiveProducts(category);
+
+		m.addAttribute("categories", categories);
+		m.addAttribute("products", products);
+		m.addAttribute("paramValue", category);
+
 		return "product";
 	}
-	
+
 	@GetMapping("/product/{id}")
-	public String product(@PathVariable int id,Model m) {
-		
+	public String product(@PathVariable int id, Model m) {
+
 		Product productById = productService.getProductById(id);
-		
+
 		m.addAttribute("product", productById);
-		
+
 		return "view_product";
 	}
-	
-	
+
 	@PostMapping("/saveUser")
-	public String saveUser(@ModelAttribute UserDtls user,@RequestParam("img") MultipartFile file, HttpSession session) throws IOException {
-		
+	public String saveUser(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
+			throws IOException {
+
 		String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
-		
+
 		user.setProfileImage(imageName);
-		
+
 		UserDtls saveUser = userService.saveUser(user);
-		
-		if(!ObjectUtils.isEmpty(saveUser)) {
-			
-			if(!file.isEmpty()) {
+
+		if (!ObjectUtils.isEmpty(saveUser)) {
+
+			if (!file.isEmpty()) {
 				File saveFile = new ClassPathResource("static/img").getFile();
 				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
 						+ file.getOriginalFilename());
 
-				 System.out.println(path);
+				System.out.println(path);
 
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
-				
+
 				session.setAttribute("succMsg", "Saved Successfully !");
 
 			}
-			
-		}else {
+
+		} else {
 			session.setAttribute("errorMsg", "something wrong on server !");
 		}
-		
+
 		return "redirect:/register";
 	}
-	
-	
-	//forgot password
-	
+
+	// forgot password
+
 	@GetMapping("/forgot-password")
 	public String forgotPassword() {
-		
-		
+
 		return "forgot_password";
 	}
-	
+
 	@PostMapping("/forgot-password")
-	public String processforgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request) throws UnsupportedEncodingException, MessagingException {
-		
+	public String processforgotPassword(@RequestParam String email, HttpSession session, HttpServletRequest request)
+			throws UnsupportedEncodingException, MessagingException {
+
 		UserDtls userByEmail = userService.getUserByEmail(email);
-		
-		if(ObjectUtils.isEmpty(userByEmail)) {
-			
+
+		if (ObjectUtils.isEmpty(userByEmail)) {
+
 			session.setAttribute("errorMsg", "Invalid email !");
-		}else {
-			
+		} else {
+
 			String resetToken = UUID.randomUUID().toString();
-			
-			userService.updateUserResetToken(email,resetToken);
-			
-			String url = CommonUtil.generateUrl(request)+"/reset-password?token="+resetToken;
-			
-			Boolean sendMail = commonUtil.sendMail(url,email);
-			
+
+			userService.updateUserResetToken(email, resetToken);
+
+			String url = CommonUtil.generateUrl(request) + "/reset-password?token=" + resetToken;
+
+			Boolean sendMail = commonUtil.sendMail(url, email);
+
 			if (sendMail) {
 				session.setAttribute("succMsg", "Please check your mail..Password reset link is send.");
 			} else {
 				session.setAttribute("errorMsg", "something wrong on server ! Mail not send.");
 			}
 		}
-		
+
 		return "redirect:/forgot-password";
 	}
-	
+
 	@GetMapping("/reset-password")
-	public String showResetPassword(@RequestParam String token,HttpSession session,Model m) {
-		
+	public String showResetPassword(@RequestParam String token, HttpSession session, Model m) {
+
 		UserDtls userByToken = userService.getUserByToken(token);
-		
-		if(userByToken==null) { 
+
+		if (userByToken == null) {
 			m.addAttribute("msg", "Your link is invalid or expired !");
 			return "message";
 		}
-		
+
 		m.addAttribute("token", token);
-		
+
 		return "reset_password";
 	}
-	
+
 	@PostMapping("/reset-password")
-	public String ResetPassword(@RequestParam String token,@RequestParam String password,HttpSession session,Model m) {
-		
+	public String ResetPassword(@RequestParam String token, @RequestParam String password, HttpSession session,
+			Model m) {
+
 		UserDtls userByToken = userService.getUserByToken(token);
-		
-		if(userByToken==null) { 
+
+		if (userByToken == null) {
 			m.addAttribute("msg", "Your link is invalid or expired !");
 			return "message";
-		}else {
+		} else {
 			userByToken.setPassword(passwordEncoder.encode(password));
 			userByToken.setResetToken(null);
 			userService.updateUser(userByToken);
 			m.addAttribute("msg", "Password chnged successfully !");
 			return "message";
 		}
-		
-		
+
 	}
-	
+
 }

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http:thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<html lang="en" xmlns:th="http:thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Insert title here</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 </head>
 
 <body>
 	<section>
-		<div class="container card-sh" style="margin-top: 100px; margin-bottom: 100px">
+		<div class="container card-sh"
+			style="margin-top: 100px; margin-bottom: 100px">
 
 			<div class="col-md-12 p-5">
 				<div class="row">
@@ -25,7 +27,8 @@
 					</th:block>
 
 					<div class="col-md-6 text-end">
-						<img alt="" th:src="@{'/img/product_img/'+${product.image}}" width="330px" height="400px">
+						<img alt="" th:src="@{'/img/product_img/'+${product.image}}"
+							width="330px" height="400px">
 					</div>
 
 
@@ -91,7 +94,8 @@
 										Cart</a>
 								</th:block>
 								<th:block th:unless="${user==null}">
-									<a th:href="@{/user/addCart(pid=${product.id}, uid=${user.id})}"
+									<a
+										th:href="@{/user/addCart(pid=${product.id}, uid=${user.id})}"
 										class="btn btn-danger col-md-12">Add To Cart</a>
 								</th:block>
 							</th:block>

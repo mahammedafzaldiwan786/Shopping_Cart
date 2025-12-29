@@ -38,7 +38,7 @@ public class UserController {
 
 	@Autowired
 	private CartService cartService;
-	
+
 	@Autowired
 	private OrderService orderService;
 
@@ -104,10 +104,10 @@ public class UserController {
 
 		return "redirect:/user/cart";
 	}
-	
+
 	@GetMapping("/orders")
 	public String orderPage(Principal p, Model m) {
-		
+
 		UserDtls user = getLoggedInUserDetails(p);
 
 		List<Cart> carts = cartService.getCartsByUser(user.getId());
@@ -119,64 +119,61 @@ public class UserController {
 			m.addAttribute("totalOrderPrice", totalOrderPrice);
 			m.addAttribute("orderPrice", orderPrice);
 		}
-		
+
 		return "/user/order";
 	}
-	
-	
+
 	@PostMapping("/save-order")
-	public String saveOrder(@ModelAttribute OrderRequest request,Principal p) {
-		
+	public String saveOrder(@ModelAttribute OrderRequest request, Principal p) {
+
 //		System.out.println(request);
-		
+
 		UserDtls user = getLoggedInUserDetails(p);
-		
+
 		orderService.saveOrder(user.getId(), request);
-		
+
 		return "redirect:/user/success";
 	}
-	
+
 	@GetMapping("/success")
 	public String loadSuccess() {
 		return "/user/success";
 	}
-	
+
 	@GetMapping("/user-orders")
-	public String myOrders(Model model,Principal p) {
-		
+	public String myOrders(Model model, Principal p) {
+
 		UserDtls loginUser = getLoggedInUserDetails(p);
-		
+
 		List<ProductOrder> orders = orderService.getOrdersByUserId(loginUser.getId());
-		
+
 		model.addAttribute("orders", orders);
-		
+
 		return "/user/my_orders";
 	}
-	
+
 	@GetMapping("/update-status")
-	public String updateOrderStatus(@RequestParam Integer id,@RequestParam Integer st,HttpSession session) {
-		
+	public String updateOrderStatus(@RequestParam Integer id, @RequestParam Integer st, HttpSession session) {
+
 		OrderStatus[] values = OrderStatus.values();
 		String status = null;
-		
-		for(OrderStatus orderSt : values) {
-			if(orderSt.getId().equals(st)) {
+
+		for (OrderStatus orderSt : values) {
+			if (orderSt.getId().equals(st)) {
 				status = orderSt.getName();
 			}
 		}
-		
-		
+
 		Boolean updateOrderStatus = orderService.updateOrderStatus(id, status);
-		
-		if(updateOrderStatus) {
+
+		if (updateOrderStatus) {
 			session.setAttribute("succMsg", "Status updated !");
-		}else {
+		} else {
 			session.setAttribute("errorMsg", "Status Not updated !");
 		}
-		
+
 		return "redirect:/user/user-orders";
 	}
-	
 
 	private UserDtls getLoggedInUserDetails(Principal p) {
 

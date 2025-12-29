@@ -9,7 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.ecom.model.UserDtls;
 
-public class CustomUser implements UserDetails{
+public class CustomUser implements UserDetails {
 
 	private UserDtls user;
 
@@ -26,44 +26,42 @@ public class CustomUser implements UserDetails{
 
 	@Override
 	public String getPassword() {
-		
+
 		return user.getPassword();
 	}
 
 	@Override
 	public String getUsername() {
-		
+
 		return user.getEmail();
 	}
-	
+
 	@Override
 	public boolean isAccountNonExpired() {
-		
+
 		return true;
-		
+
 	}
-	
+
 	@Override
 	public boolean isAccountNonLocked() {
-		
+
 		return user.getAccountNonLocked();
-		
+
 	}
-	
+
 	@Override
 	public boolean isCredentialsNonExpired() {
-		
+
 		return true;
-		
+
 	}
-	
+
 	@Override
 	public boolean isEnabled() {
-		
+
 		return user.getIsEnabled();
-		
+
 	}
-	
-	
-	
+
 }

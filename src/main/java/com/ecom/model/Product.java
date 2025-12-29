@@ -17,33 +17,28 @@ import lombok.Setter;
 @Entity
 public class Product {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
 
-    @Column(length = 500)
-    private String title;
+	@Column(length = 500)
+	private String title;
 
-    @Column(length = 5000)
-    private String description;
+	@Column(length = 5000)
+	private String description;
 
-    private String category;
+	private String category;
 
-    private String image;
+	private String image;
 
-    private Double price;
+	private Double price;
 
-    private int stock;
+	private int stock;
 
-    private int discount;
+	private int discount;
 
-    private double discountPrice;
-    
-    private Boolean isActive;
+	private double discountPrice;
 
-	
+	private Boolean isActive;
 
-    
-    
-    
 }

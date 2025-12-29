@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http:thymeleaf.org" th:replace="~{base::layout(~{::section})}">
+<html lang="en" xmlns:th="http:thymeleaf.org"
+	th:replace="~{base::layout(~{::section})}">
 
 <head>
-	<meta charset="UTF-8">
-	<title>Insert title here</title>
+<meta charset="UTF-8">
+<title>Insert title here</title>
 </head>
 
 <body>
@@ -16,8 +17,9 @@
 					<form action="">
 						<div class="input-group">
 							<input type="text" class="form-control" name="ch">
-							<button class="btn btn-light text-dark ms-3 col-md-2"><i
-									class="fa-solid fa-magnifying-glass"></i> Search</button>
+							<button class="btn btn-light text-dark ms-3 col-md-2">
+								<i class="fa-solid fa-magnifying-glass"></i> Search
+							</button>
 						</div>
 					</form>
 				</div>
@@ -30,11 +32,11 @@
 					<div class="card shadow-sm p-3 mb-5 bg-body-tertiary rounded">
 						<div class="list-group">
 							<p class="fs-5">Category</p>
-							<a href="/products" th:classappend="${paramValue == ''} ? 'active':''"
-								class="list-group-item list-group-item-action" aria-current="true">
-								All
-							</a>
-							<a th:each="c:${categories}" th:href="@{'/products?category='+${c.name}}"
+							<a href="/products"
+								th:classappend="${paramValue == ''} ? 'active':''"
+								class="list-group-item list-group-item-action"
+								aria-current="true"> All </a> <a th:each="c:${categories}"
+								th:href="@{'/products?category='+${c.name}}"
 								th:classappend="${paramValue == c.name} ? 'active':''"
 								class="list-group-item list-group-item-action">[[${c.name}]]</a>
 
@@ -51,25 +53,27 @@
 									<div class="col-md-3" th:each="p:${products}">
 										<div class="card">
 											<div class="card-body">
-												<img alt="" th:src="@{'/img/product_img/'+${p.image}}" width="100%"
-													height="150xp">
+												<img alt="" th:src="@{'/img/product_img/'+${p.image}}"
+													width="100%" height="150xp">
 												<p class="fs-3 text-center">[[${p.title}]]</p>
 												<div class="row text-center">
-													<p class="fs-6 fw-bold">&#8377; <span>[[${p.discountPrice}]]</span>
-														<br>
-														<span
+													<p class="fs-6 fw-bold">
+														&#8377; <span>[[${p.discountPrice}]]</span> <br> <span
 															class="text-decoration-line-through text-secondary">&#8377;[[${p.price}]]</span>
-														<span class="fs-6 text-success">[[${p.discount}]]% off</span>
+														<span class="fs-6 text-success">[[${p.discount}]]%
+															off</span>
 													</p>
 													<a th:href="@{'/product/'+${p.id}}"
-														class="btn btn-primary col-md-6 offset-md-3">View Details</a>
+														class="btn btn-primary col-md-6 offset-md-3">View
+														Details</a>
 												</div>
 											</div>
 										</div>
 									</div>
 								</th:block>
 								<th:block th:unless="${products.size>0}">
-									<p class="fs-4 text-center mt-4 text-danger">Product not available</p>
+									<p class="fs-4 text-center mt-4 text-danger">Product not
+										available</p>
 								</th:block>
 
 							</div>
