@@ -7,11 +7,11 @@ import com.ecom.model.ProductOrder;
 
 public interface OrderService {
 
-	public void saveOrder(Integer userId, OrderRequest orderRequest);
+	public void saveOrder(Integer userId, OrderRequest orderRequest) throws Throwable;
 
 	public List<ProductOrder> getOrdersByUserId(Integer userId);
 
-	public Boolean updateOrderStatus(Integer id, String status);
+	public ProductOrder updateOrderStatus(Integer id, String status);
 
 	public List<ProductOrder> getAllOrders();
 }

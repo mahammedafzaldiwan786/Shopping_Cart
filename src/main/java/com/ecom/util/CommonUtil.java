@@ -7,6 +7,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
+import com.ecom.model.ProductOrder;
+
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
@@ -36,6 +38,44 @@ public class CommonUtil {
 		mailSender.send(message);
 
 		return true;
+	}
+
+	String msg = null;
+	
+	public Boolean sendMailForProductOrder(ProductOrder order,String status) throws Throwable {
+
+		MimeMessage message = mailSender.createMimeMessage();
+
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+
+		helper.setFrom("diwanafzalkhalidsha@gmail.com", "Shoping Cart");
+		helper.setTo(order.getOrderAddress().getEmail());
+
+		
+		msg = "<p>Dear <strong>[[userName]]</strong>,<br></p>"
+				+"<p>Your Product Order is <b>[[orderStatus]]</b>.</p>"
+				+"<p><b>Product Details :</b></p>"
+				+ "<p>Name : [[productName]]</p>"
+				+"<p>Category : [[category]]</p>"
+				+"<p>Quantity : [[quantity]]</p>"
+				+"<p>Price : [[price]]</p>"
+				+"<p>Payment : [[paymentType]]</p>";
+		
+		
+		msg = msg.replace("[[orderStatus]]",status);
+		msg = msg.replace("[[userName]]",order.getOrderAddress().getFirstName());
+		msg = msg.replace("[[productName]]",order.getProduct().getTitle());
+		msg = msg.replace("[[category]]",order.getProduct().getCategory());
+		msg = msg.replace("[[quantity]]",order.getQuantity().toString());
+		msg = msg.replace("[[price]]",order.getPrice().toString());
+		msg = msg.replace("[[paymentType]]",order.getPaymentType());
+
+		helper.setSubject("Product Order Status");
+		helper.setText(msg, true);
+
+		mailSender.send(message);
+
+		return false;
 	}
 
 	public static String generateUrl(HttpServletRequest request) {
