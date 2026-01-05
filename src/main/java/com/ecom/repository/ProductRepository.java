@@ -11,5 +11,7 @@ public interface ProductRepository extends JpaRepository<Product, Integer> {
 	public List<Product> findByIsActiveTrue();
 
 	public List<Product> findAllByCategory(String category);
+	
+	public List<Product> findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(String ch,String ch2);
 
 }

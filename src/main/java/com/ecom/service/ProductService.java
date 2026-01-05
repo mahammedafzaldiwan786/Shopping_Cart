@@ -19,5 +19,7 @@ public interface ProductService {
 	public Product updateProduct(Product product, MultipartFile image);
 
 	public List<Product> getAllActiveProducts(String category);
+	
+	public List<Product> searchProduct(String ch);
 
 }
