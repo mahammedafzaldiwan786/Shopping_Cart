@@ -95,7 +95,7 @@ public class UserController {
 	@GetMapping("/cart")
 	public String loadCartPage(Principal p, Model m) {
 
-		UserDtls user = getLoggedInUserDetails(p);
+		UserDtls user = commonUtil.getLoggedInUserDetails(p);
 
 		List<Cart> carts = cartService.getCartsByUser(user.getId());
 		m.addAttribute("carts", carts);
@@ -118,7 +118,7 @@ public class UserController {
 	@GetMapping("/orders")
 	public String orderPage(Principal p, Model m) {
 
-		UserDtls user = getLoggedInUserDetails(p);
+		UserDtls user = commonUtil.getLoggedInUserDetails(p);
 
 		List<Cart> carts = cartService.getCartsByUser(user.getId());
 		m.addAttribute("carts", carts);
@@ -138,7 +138,7 @@ public class UserController {
 
 //		System.out.println(request);
 
-		UserDtls user = getLoggedInUserDetails(p);
+		UserDtls user = commonUtil.getLoggedInUserDetails(p);
 
 		orderService.saveOrder(user.getId(), request);
 
@@ -153,7 +153,7 @@ public class UserController {
 	@GetMapping("/user-orders")
 	public String myOrders(Model model, Principal p) {
 
-		UserDtls loginUser = getLoggedInUserDetails(p);
+		UserDtls loginUser = commonUtil.getLoggedInUserDetails(p);
 
 		List<ProductOrder> orders = orderService.getOrdersByUserId(loginUser.getId());
 
@@ -214,7 +214,7 @@ public class UserController {
 	@PostMapping("/change-password")
 	public String changePassword(@RequestParam String newPassword,@RequestParam String currentPassword,Principal p,HttpSession session) {
 		
-		UserDtls loggedInUserDetails = getLoggedInUserDetails(p);
+		UserDtls loggedInUserDetails = commonUtil.getLoggedInUserDetails(p);
 		
 		boolean matches = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
 		
@@ -234,12 +234,12 @@ public class UserController {
 		return "redirect:/user/profile";
 	}
 
-	private UserDtls getLoggedInUserDetails(Principal p) {
-
-		String email = p.getName();
-
-		UserDtls userDtls = userService.getUserByEmail(email);
-
-		return userDtls;
-	}
+//	private UserDtls getLoggedInUserDetails(Principal p) {
+//
+//		String email = p.getName();
+//
+//		UserDtls userDtls = userService.getUserByEmail(email);
+//
+//		return userDtls;
+//	}
 }

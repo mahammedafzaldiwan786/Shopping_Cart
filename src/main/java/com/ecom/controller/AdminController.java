@@ -12,6 +12,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ObjectUtils;
@@ -55,6 +56,9 @@ public class AdminController {
 
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 
 	@Autowired
 	private CommonUtil commonUtil;
@@ -324,16 +328,24 @@ public class AdminController {
 	}
 
 	@GetMapping("/users")
-	public String users(Model m) {
+	public String users(Model m,@RequestParam Integer type) {
 
-		List<UserDtls> users = userService.getAllUsers("ROLE_USER");
+//		List<UserDtls> users = userService.getAllUsers("ROLE_USER");
+		List<UserDtls> users = null;
+		if(type==1) {
+			users = userService.getAllUsers("ROLE_USER");
+		}else {
+			users = userService.getAllUsers("ROLE_ADMIN");
+		}
+		
+		m.addAttribute("userType", type);
 		m.addAttribute("users", users);
 
 		return "/admin/users";
 	}
 
 	@GetMapping("/updateStatus")
-	public String updateUserAccountStatus(@RequestParam Integer id, @RequestParam Boolean status, HttpSession session) {
+	public String updateUserAccountStatus(@RequestParam Integer id, @RequestParam Boolean status,@RequestParam Integer type, HttpSession session) {
 
 		Boolean updateStatus = userService.updateAccountStatus(id, status);
 
@@ -344,7 +356,7 @@ public class AdminController {
 			session.setAttribute("errorMsg", "something wrong on server !");
 		}
 
-		return "redirect:/admin/users";
+		return "redirect:/admin/users?type="+type;
 	}
 
 	@GetMapping("/orders")
@@ -440,5 +452,90 @@ public class AdminController {
 		return "/admin/orders";
 	}
 	
+	@GetMapping("/add-admin")
+	public String loadAddAdmin() {
+		
+		return "/admin/add_admin";
+	}
+	
+	@PostMapping("/save-admin")
+	public String saveAdmin(@ModelAttribute UserDtls user, @RequestParam("img") MultipartFile file, HttpSession session)
+			throws IOException {
 
+		String imageName = file.isEmpty() ? "default.jpg" : file.getOriginalFilename();
+
+		user.setProfileImage(imageName);
+
+		UserDtls saveUser = userService.saveAdmin(user);
+
+		if (!ObjectUtils.isEmpty(saveUser)) {
+
+			if (!file.isEmpty()) {
+				File saveFile = new ClassPathResource("static/img").getFile();
+				Path path = Paths.get(saveFile.getAbsolutePath() + File.separator + "profile_img" + File.separator
+						+ file.getOriginalFilename());
+
+				System.out.println(path);
+
+				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+
+				session.setAttribute("succMsg", "Register Successfully !");
+
+			}
+
+		} else {
+			session.setAttribute("errorMsg", "something wrong on server !");
+		}
+
+		return "redirect:/admin/add-admin";
+	}
+	
+	
+	
+	
+	@GetMapping("/profile")
+	public String profile() {
+		
+		
+		return "/admin/profile";
+	}
+	
+	@PostMapping("/update-profile")
+	public String updateProfile(@ModelAttribute UserDtls user,@RequestParam MultipartFile img,HttpSession session) {
+		
+		UserDtls updateUserProfile = userService.updateUserProfile(user, img);
+		
+		if(ObjectUtils.isEmpty(updateUserProfile)) {
+			session.setAttribute("errorMsg", "Profile Not updated !");
+		}else {
+			session.setAttribute("succMsg", "Profile updated successfully !");
+		}
+		
+		return "redirect:/admin/profile";
+	}
+	
+	@PostMapping("/change-password")
+	public String changePassword(@RequestParam String newPassword,@RequestParam String currentPassword,Principal p,HttpSession session) {
+		
+		UserDtls loggedInUserDetails = commonUtil.getLoggedInUserDetails(p);
+		
+		boolean matches = passwordEncoder.matches(currentPassword, loggedInUserDetails.getPassword());
+		
+		if(matches) {
+			String encodePassword = passwordEncoder.encode(newPassword);
+			loggedInUserDetails.setPassword(encodePassword);
+			UserDtls updateUser = userService.updateUser(loggedInUserDetails);
+			if(ObjectUtils.isEmpty(updateUser)) {
+				session.setAttribute("errorMsg", "Password Not updated! Error in server!");
+			}else {
+				session.setAttribute("succMsg", "Password updated successfully!");
+			}
+		}else {
+			session.setAttribute("errorMsg", "Current password incorrect!");
+		}
+		
+		return "redirect:/admin/profile";
+	}
+
+	
 }

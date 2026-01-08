@@ -34,6 +34,7 @@ import com.ecom.service.ProductService;
 import com.ecom.service.UserService;
 import com.ecom.util.CommonUtil;
 
+import io.micrometer.common.util.StringUtils;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -96,7 +97,9 @@ public class HomeController {
 	}
 
 	@GetMapping("/products")
-	public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category, @RequestParam(name  = "pageNo", defaultValue = "0") Integer pageNo, @RequestParam(name  = "pageSize", defaultValue = "8") Integer pageSize) {
+	public String products(Model m, @RequestParam(value = "category", defaultValue = "") String category,
+			@RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+			@RequestParam(name = "pageSize", defaultValue = "8") Integer pageSize,@RequestParam(defaultValue = "") String ch) {
 
 		List<Category> categories = categoryService.getAllActiveCategory();
 		m.addAttribute("categories", categories);
@@ -104,9 +107,17 @@ public class HomeController {
 
 //		List<Product> products = productService.getAllActiveProducts(category);
 //		m.addAttribute("products", products);
+
+
+		Page<Product> page = null;
+		if(StringUtils.isEmpty(ch)) {
+			 page = productService.getAllActiveProductPagination(pageNo, pageSize, category);
+		}else {
+			page = productService.searchActiveProductPagination(pageNo, pageSize, category, ch);
+		}
 		
-		Page<Product> page = productService.getAllActiveProductPagination(pageNo, pageSize, category);
-		 List<Product> products = page.getContent();
+//		Page<Product> page = productService.getAllActiveProductPagination(pageNo, pageSize, category);
+		List<Product> products = page.getContent();
 		m.addAttribute("products", products);
 		m.addAttribute("productSize", products.size());
 		m.addAttribute("pageNo", page.getNumber());
@@ -115,7 +126,7 @@ public class HomeController {
 		m.addAttribute("totalPages", page.getTotalPages());
 		m.addAttribute("isFirst", page.isFirst());
 		m.addAttribute("isLast", page.isLast());
-		
+
 		return "product";
 	}
 
@@ -150,7 +161,7 @@ public class HomeController {
 
 				Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-				session.setAttribute("succMsg", "Saved Successfully !");
+				session.setAttribute("succMsg", "Register Successfully !");
 
 			}
 
@@ -231,19 +242,18 @@ public class HomeController {
 		}
 
 	}
-	
+
 	@GetMapping("/search")
-	public String searchProduct(@RequestParam String ch,Model model) {
-		
+	public String searchProduct(@RequestParam String ch, Model model) {
+
 		List<Product> searchProducts = productService.searchProduct(ch);
-		
+
 		model.addAttribute("products", searchProducts);
-		
+
 		List<Category> categories = categoryService.getAllActiveCategory();
-		
+
 		model.addAttribute("categories", categories);
-		
-		
+
 		return "product";
 	}
 

@@ -13,7 +13,8 @@
 		<div class="container mt-5">
 			<div class="card card-sh">
 				<div class="card-header text-center">
-					<p class="fs-4">Users</p>
+					<p class="fs-4" th:if="${userType==1}">Users</p>
+					<p class="fs-4" th:if="${userType==2}">Admins</p>
 					<th:block th:if="${session.succMsg}">
 						<p class="text-success fw-bold">[[${session.succMsg}]]</p>
 						<th:block th:text="${@commonServiceImpl.removeSessionMessage()}"></th:block>
@@ -48,16 +49,16 @@
 								<td>[[${u.mobileNumber}]]</td>
 								<td>
 									<!-- [[${u.address+','+u.city+','+u.state+','+u.pincode}]] -->
-									[[${u.address}]] <br> [[${u.city}]] , [[${u.state}]] -
+									[[${u.address}]] , [[${u.city}]] ,<br> [[${u.state}]] -
 									[[${u.pincode}]]
 
 								</td>
 								<td>[[${u.isEnabled}]]</td>
 
 								<td><a
-									th:href="@{'/admin/updateStatus?status=true&id='+${u.id}}"
+									th:href="@{'/admin/updateStatus?status=true&id='+${u.id}}+'&type='+${userType}"
 									class="btn btn-sm btn-primary">Active </a> <a
-									th:href="@{'/admin/updateStatus?status=false&id='+${u.id}}"
+									th:href="@{'/admin/updateStatus?status=false&id='+${u.id}}+'&type='+${userType}"
 									class="btn btn-sm btn-danger">Inactive </a></td>
 							</tr>
 						</tbody>
