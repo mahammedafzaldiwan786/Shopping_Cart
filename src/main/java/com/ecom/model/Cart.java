@@ -21,7 +21,7 @@ public class Cart {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
+	private Integer id;
 
 	@ManyToOne
 	private UserDtls user;
