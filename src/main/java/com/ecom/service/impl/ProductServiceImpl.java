@@ -38,6 +38,15 @@ public class ProductServiceImpl implements ProductService {
 
 		return productRepository.findAll();
 	}
+	
+	
+
+	@Override
+	public Page<Product> getAllProductsPagination(Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		
+		return productRepository.findAll(pageable);
+	}
 
 	@Override
 	public Boolean deleteProduct(int id) {
@@ -131,6 +140,12 @@ public class ProductServiceImpl implements ProductService {
 		
 		return productRepository.findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch);
 	}
+	
+	@Override
+	public Page<Product> searchProductPagination(String ch, Integer pageNo, Integer pageSize) {
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		return  productRepository.findByTitleContainingIgnoreCaseOrCategoryContainingIgnoreCase(ch, ch,pageable);
+	}
 
 	@Override
 	public Page<Product> getAllActiveProductPagination(Integer pageNo, Integer pageSize,String category) {
@@ -150,5 +165,7 @@ public class ProductServiceImpl implements ProductService {
 		
 		return pageProduct;
 	}
+
+	
 
 }
