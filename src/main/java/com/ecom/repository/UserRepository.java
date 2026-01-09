@@ -2,6 +2,8 @@ package com.ecom.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ecom.model.UserDtls;
@@ -15,5 +17,12 @@ public interface UserRepository extends JpaRepository<UserDtls, Integer> {
 	public UserDtls findByResetToken(String token);
 	
 	public Boolean existsByEmail(String email);
+
+	public Page<UserDtls> findByRole(String role, Pageable pageable);
+	
+	 Page<UserDtls> findByRoleAndNameContainingIgnoreCaseOrRoleAndEmailContainingIgnoreCase(
+	            String role1, String name,
+	            String role2, String email,
+	            Pageable pageable);
 
 }

@@ -12,11 +12,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ecom.model.Product;
 import com.ecom.model.UserDtls;
 import com.ecom.repository.UserRepository;
 import com.ecom.service.UserService;
@@ -196,5 +200,28 @@ public class UserServiceImpl implements UserService {
 		
 		return userRepository.existsByEmail(email);
 	}
+
+	@Override
+	public Page<UserDtls> getAllUsersPagination(String role, Integer pageNo, Integer pageSize) {
+		
+		Pageable pageable = PageRequest.of(pageNo, pageSize);
+		
+		return userRepository.findByRole(role,pageable);
+	}
+	
+	@Override
+	public Page<UserDtls> getUsersWithSearch(String role, String ch, int pageNo, int pageSize) {
+
+	    Pageable pageable = PageRequest.of(pageNo, pageSize);
+
+	    if (ch != null && ch.trim().length() > 0) {
+	        return userRepository
+	                .findByRoleAndNameContainingIgnoreCaseOrRoleAndEmailContainingIgnoreCase(
+	                        role, ch, role, ch, pageable);
+	    } else {
+	        return userRepository.findByRole(role, pageable);
+	    }
+	}
+
 
 }

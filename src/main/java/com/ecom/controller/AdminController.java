@@ -327,22 +327,50 @@ public class AdminController {
 		return "redirect:/admin/editProduct/" + product.getId();
 	}
 
+//	@GetMapping("/users")
+//	public String users(Model m,@RequestParam Integer type) {
+//
+////		List<UserDtls> users = userService.getAllUsers("ROLE_USER");
+//		List<UserDtls> users = null;
+//		if(type==1) {
+//			users = userService.getAllUsers("ROLE_USER");
+//		}else {
+//			users = userService.getAllUsers("ROLE_ADMIN");
+//		}
+//		
+//		m.addAttribute("userType", type);
+//		m.addAttribute("users", users);
+//
+//		return "/admin/users";
+//	}
+	
 	@GetMapping("/users")
-	public String users(Model m,@RequestParam Integer type) {
+	public String users(
+	        Model model,
+	        @RequestParam Integer type,
+	        @RequestParam(defaultValue = "") String ch,
+	        @RequestParam(defaultValue = "0") Integer pageNo,
+	        @RequestParam(defaultValue = "5") Integer pageSize) {
 
-//		List<UserDtls> users = userService.getAllUsers("ROLE_USER");
-		List<UserDtls> users = null;
-		if(type==1) {
-			users = userService.getAllUsers("ROLE_USER");
-		}else {
-			users = userService.getAllUsers("ROLE_ADMIN");
-		}
-		
-		m.addAttribute("userType", type);
-		m.addAttribute("users", users);
+	    String role = (type == 1) ? "ROLE_USER" : "ROLE_ADMIN";
 
-		return "/admin/users";
+	    Page<UserDtls> page = userService.getUsersWithSearch(role, ch, pageNo, pageSize);
+
+	    model.addAttribute("users", page.getContent());
+	    model.addAttribute("userType", type);
+	    model.addAttribute("ch", ch);
+
+	    model.addAttribute("pageNo", page.getNumber());
+	    model.addAttribute("pageSize", pageSize);
+	    model.addAttribute("totalElements", page.getTotalElements());
+	    model.addAttribute("totalPages", page.getTotalPages());
+	    model.addAttribute("isFirst", page.isFirst());
+	    model.addAttribute("isLast", page.isLast());
+
+	    return "admin/users";
 	}
+
+
 
 	@GetMapping("/updateStatus")
 	public String updateUserAccountStatus(@RequestParam Integer id, @RequestParam Boolean status,@RequestParam Integer type, HttpSession session) {
