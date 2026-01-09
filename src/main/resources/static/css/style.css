@@ -27,3 +27,794 @@ body {
 footer {
 	margin-top: auto;
 }
+
+
+/* =========================
+   DARK THEME VARIABLES
+========================= */
+.dark-theme {
+  --bg-main: #020617;
+  --bg-card: #0f172a;
+  --bg-soft: #111827;
+  --border: #1f2937;
+
+  --text-main: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-heading: #f9fafb;
+
+  --primary: #38bdf8;
+  --primary-hover: #0ea5e9;
+  --success: #22c55e;
+  --danger: #ef4444;
+}
+
+/* =========================
+   GLOBAL
+========================= */
+.dark-theme {
+  background: radial-gradient(circle at top, #111827, #020617);
+  color: var(--text-main);
+}
+
+.dark-theme h1,
+.dark-theme h2,
+.dark-theme h3,
+.dark-theme h4,
+.dark-theme h5,
+.dark-theme h6 {
+  color: var(--text-heading);
+}
+
+/* =========================
+   NAVBAR
+========================= */
+.dark-theme .navbar {
+  background: linear-gradient(90deg, #020617, #020617);
+  border-bottom: 1px solid var(--border);
+}
+
+.dark-theme .navbar-brand,
+.dark-theme .nav-link {
+  color: var(--text-main) !important;
+}
+
+.dark-theme .nav-link:hover {
+  color: var(--primary) !important;
+}
+
+/* =========================
+   DROPDOWN (CATEGORY)
+========================= */
+.dark-theme .dropdown-menu {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.dark-theme .dropdown-item {
+  color: var(--text-main);
+  cursor: pointer;   /* IMPORTANT */
+}
+
+.dark-theme .dropdown-item:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+/* =========================
+   PRODUCT & ADMIN CARDS
+========================= */
+.dark-theme .card {
+  background: linear-gradient(180deg, #020617, #020617);
+  border: 1px solid var(--border);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+  color: var(--text-main);
+}
+
+.dark-theme .card-title {
+  color: var(--text-heading);
+}
+
+/* =========================
+   BUTTONS
+========================= */
+.dark-theme .btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  border: none;
+  color: #000;
+}
+
+.dark-theme .btn-primary:hover {
+  opacity: 0.9;
+}
+
+.dark-theme .btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border: none;
+}
+
+/* =========================
+   CATEGORY SIDEBAR
+========================= */
+.dark-theme .list-group {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+}
+
+.dark-theme .list-group-item {
+  background: transparent;
+  color: var(--text-main);
+  border-color: var(--border);
+  cursor: pointer;
+}
+
+.dark-theme .list-group-item:hover {
+  background: var(--primary);
+  color: #000;
+}
+
+.dark-theme .list-group-item.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+  color: #000;
+  border: none;
+}
+
+/* =========================
+   FORMS
+========================= */
+.dark-theme input,
+.dark-theme textarea,
+.dark-theme select {
+  background: #020617;
+  color: var(--text-main);
+  border: 1px solid var(--border);
+}
+
+.dark-theme input::placeholder {
+  color: var(--text-muted);
+}
+
+.dark-theme input:focus,
+.dark-theme textarea:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.15rem rgba(56,189,248,0.3);
+}
+
+/* =========================
+   TABLES
+========================= */
+.dark-theme table {
+  color: var(--text-main);
+}
+
+.dark-theme th {
+  color: var(--text-heading);
+  border-color: var(--border);
+}
+
+.dark-theme td {
+  border-color: var(--border);
+}
+
+.dark-theme tbody tr:hover {
+  background: rgba(56,189,248,0.08);
+}
+
+/* =========================
+   PAGINATION
+========================= */
+.dark-theme .page-link {
+  background: #020617;
+  color: var(--text-main);
+  border-color: var(--border);
+}
+
+.dark-theme .page-item.active .page-link {
+  background: var(--primary);
+  color: #000;
+  border: none;
+}
+
+/* =========================
+   FOOTER
+========================= */
+.dark-theme footer {
+  background: #020617;
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+}
+
+
+
+
+/* ============================
+   HARD FIX FOR TABLE OVERLAP
+============================ */
+
+/* Force table isolation */
+.dark-theme table {
+  position: relative;
+  isolation: isolate;
+  z-index: 1;
+
+  background-color: #020617 !important;
+  border-collapse: separate !important;
+  border-spacing: 0;
+
+  margin-bottom: 2rem;
+}
+
+/* Prevent row bleeding */
+.dark-theme thead,
+.dark-theme tbody,
+.dark-theme tr,
+.dark-theme th,
+.dark-theme td {
+  position: relative;
+  background-color: #020617 !important;
+  z-index: 1;
+}
+
+/* Header fix */
+.dark-theme thead th {
+  background-color: #020617 !important;
+  color: #f9fafb;
+  border-bottom: 1px solid #1e293b;
+}
+
+/* Body rows */
+.dark-theme tbody tr {
+  background-color: #020617 !important;
+}
+
+/* Hover */
+.dark-theme tbody tr:hover {
+  background-color: #0f172a !important;
+}
+
+/* Borders */
+.dark-theme th,
+.dark-theme td {
+  border-color: #1e293b !important;
+}
+
+/* Kill bootstrap shadow stacking */
+.dark-theme .table-responsive {
+  overflow: auto;
+  isolation: isolate;
+}
+
+
+
+
+/* ============================
+   DARK THEME TABLE FONT FIX
+============================ */
+
+.dark-theme table {
+  color: #e5e7eb !important; /* default text for table */
+}
+
+.dark-theme th,
+.dark-theme thead th {
+  color: #f9fafb !important; /* headers brighter */
+  font-weight: 600;
+  background-color: #020617 !important; /* solid bg to avoid bleed */
+}
+
+.dark-theme td,
+.dark-theme tbody td {
+  color: #e5e7eb !important; /* normal row text */
+  background-color: #020617 !important; /* solid background for clarity */
+}
+
+/* Hover row text */
+.dark-theme tbody tr:hover td {
+  color: #ffffff !important;
+  background-color: #1e293b !important; /* slightly lighter hover */
+}
+
+/* Deleted / old price (del tag) */
+.dark-theme del {
+  color: #94a3b8 !important;
+}
+
+/* Success / discount text in tables */
+.dark-theme .text-success {
+  color: #22c55e !important;
+}
+
+.dark-theme .text-danger {
+  color: #ef4444 !important;
+}
+
+
+
+
+.dark-theme table {
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.dark-theme th, 
+.dark-theme td {
+  padding: 0.75rem 1rem;
+}
+
+
+
+/* ============================
+   DARK THEME FOOTER FIX
+============================ */
+
+.dark-theme footer {
+    background-color: #020617 !important;  /* solid dark background */
+    color: #e5e7eb !important;             /* bright text */
+    border-top: 1px solid #1e293b !important; /* subtle border */
+    padding: 1rem 0 !important;
+    text-align: center !important;
+    font-size: 0.9rem;
+}
+
+/* Links inside footer */
+.dark-theme footer a {
+    color: #38bdf8 !important;  /* primary accent color */
+    text-decoration: none;
+}
+
+.dark-theme footer a:hover {
+    color: #0ea5e9 !important;  /* hover accent */
+    text-decoration: underline;
+}
+
+
+
+/* =========================
+   DARK THEME – SEARCH SECTION
+========================= */
+
+/* Override Bootstrap bg-primary ONLY in dark mode */
+.dark-theme .bg-primary {
+    background: linear-gradient(135deg, #020617, #0b1220) !important;
+    color: #e5e7eb !important;
+    border: 1px solid #1e293b;
+}
+
+/* Search section wrapper (extra safety) */
+.dark-theme .search-section,
+.dark-theme .search-box,
+.dark-theme .product-search {
+    background: linear-gradient(135deg, #020617, #0b1220);
+    border: 1px solid #1e293b;
+}
+
+/* Search heading */
+.dark-theme .search-section h4,
+.dark-theme .search-section h5 {
+    color: #f9fafb;
+}
+
+/* Search input */
+.dark-theme .search-section input {
+    background: #020617;
+    color: #e5e7eb;
+    border: 1px solid #1e293b;
+}
+
+.dark-theme .search-section input::placeholder {
+    color: #94a3b8;
+}
+
+/* Search button */
+.dark-theme .search-section .btn-primary {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+    color: black;
+    border: none;
+}
+
+/* ==========================================
+   DARK THEME – SEARCH BUTTON (MATCH PRIMARY)
+========================================== */
+
+body.dark-theme .search-section .btn-primary,
+body.dark-theme .product-search .btn-primary,
+body.dark-theme .bg-primary .btn-primary {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    color: #020617 !important;
+    border: none !important;
+    font-weight: 600;
+}
+
+/* Hover effect – same as other buttons */
+body.dark-theme .search-section .btn-primary:hover,
+body.dark-theme .product-search .btn-primary:hover,
+body.dark-theme .bg-primary .btn-primary:hover {
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+    color: #020617 !important;
+}
+
+/* Focus & active */
+body.dark-theme .search-section .btn-primary:focus,
+body.dark-theme .search-section .btn-primary:active {
+    box-shadow: 0 0 0 0.15rem rgba(56, 189, 248, 0.35);
+}
+
+
+/* ============================
+   FIX: LATEST PRODUCT SECTION
+============================ */
+
+/* Override bg-light ONLY in dark theme */
+.dark-theme .bg-light {
+  background: linear-gradient(180deg, #0b1220, #020617) !important;
+  color: #e5e7eb;
+}
+/* Override Bootstrap card background utility */
+.dark-theme .bg-body-tertiary {
+  background: linear-gradient(180deg, #020617, #020617) !important;
+  border: 1px solid #1e293b;
+  color: #e5e7eb;
+}
+/* Fix forced dark text inside cards */
+.dark-theme .text-dark {
+  color: #e5e7eb !important;
+}
+
+/* Product title links */
+.dark-theme .card a {
+  color: #f9fafb !important;
+  text-decoration: none;
+}
+
+.dark-theme .card a:hover {
+  color: #38bdf8 !important;
+}
+/* Latest Product heading */
+.dark-theme .fs-4 {
+  color: #f9fafb !important;
+}
+/* Hover effect for latest product cards */
+.dark-theme .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px rgba(56, 189, 248, 0.15);
+  transition: all 0.3s ease;
+}
+
+
+
+/* ============================================
+   DARK THEME – FORCE SEARCH BUTTON FIX
+============================================ */
+
+/* Normal state */
+body.dark-theme .bg-primary .btn-primary,
+body.dark-theme .search-section .btn-primary,
+body.dark-theme .product-search .btn-primary {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    color: #020617 !important;
+    border: none !important;
+    font-weight: 600;
+}
+
+/* Hover */
+body.dark-theme .bg-primary .btn-primary:hover,
+body.dark-theme .search-section .btn-primary:hover,
+body.dark-theme .product-search .btn-primary:hover {
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+    color: #020617 !important;
+}
+
+/* Focus / Active */
+body.dark-theme .bg-primary .btn-primary:focus,
+body.dark-theme .bg-primary .btn-primary:active {
+    box-shadow: 0 0 0 0.2rem rgba(56, 189, 248, 0.45) !important;
+    color: #020617 !important;
+}
+
+
+/* ==================================================
+   DARK THEME – BOOTSTRAP SEARCH BUTTON OVERRIDE
+   (FINAL / NUCLEAR FIX)
+================================================== */
+
+body.dark-theme .bg-primary .btn,
+body.dark-theme .bg-primary .btn-primary,
+body.dark-theme .bg-primary button,
+body.dark-theme .bg-primary a.btn {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    color: #020617 !important;
+    border: none !important;
+    font-weight: 600;
+    text-shadow: none !important;
+    filter: none !important;
+}
+
+/* Hover */
+body.dark-theme .bg-primary .btn:hover,
+body.dark-theme .bg-primary .btn-primary:hover {
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+    color: #020617 !important;
+}
+
+/* Focus */
+body.dark-theme .bg-primary .btn:focus {
+    box-shadow: 0 0 0 0.25rem rgba(56,189,248,.45) !important;
+    color: #020617 !important;
+}
+
+/* HARD RESET inherited white text */
+body.dark-theme .bg-primary * {
+    color: inherit;
+}
+
+
+
+/* ============================
+   DARK THEME – BUTTON FIX
+============================ */
+
+/* Base button text color */
+.dark-theme .btn {
+  color: #020617 !important;
+  font-weight: 600;
+}
+
+/* PRIMARY BUTTON */
+.dark-theme .btn-primary {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  border: none;
+  color: #020617 !important;
+}
+
+/* PRIMARY HOVER */
+.dark-theme .btn-primary:hover,
+.dark-theme .btn-primary:focus,
+.dark-theme .btn-primary:active {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8);
+  color: #020617 !important;
+}
+
+/* DANGER BUTTON */
+.dark-theme .btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  border: none;
+  color: #ffffff !important;
+}
+
+.dark-theme .btn-danger:hover,
+.dark-theme .btn-danger:focus {
+  background: linear-gradient(135deg, #dc2626, #b91c1c);
+  color: #ffffff !important;
+}
+
+/* SUCCESS BUTTON */
+.dark-theme .btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border: none;
+  color: #020617 !important;
+}
+
+.dark-theme .btn-success:hover {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: #020617 !important;
+}
+
+/* OUTLINE BUTTONS */
+.dark-theme .btn-outline-primary {
+  color: #38bdf8 !important;
+  border-color: #38bdf8;
+}
+
+.dark-theme .btn-outline-primary:hover {
+  background: #38bdf8;
+  color: #020617 !important;
+}
+
+/* DISABLED STATE */
+.dark-theme .btn:disabled,
+.dark-theme .btn.disabled {
+  opacity: 0.6;
+  color: #020617 !important;
+}
+
+
+/* =====================================
+   DARK THEME – FINAL BUTTON TEXT FIX
+   (Bootstrap Override – Guaranteed)
+===================================== */
+
+/* Force text color for ALL button content */
+.dark-theme .btn,
+.dark-theme .btn *,
+.dark-theme .btn-primary,
+.dark-theme .btn-primary *,
+.dark-theme .btn-danger,
+.dark-theme .btn-danger *,
+.dark-theme .btn-success,
+.dark-theme .btn-success * {
+  color: #020617 !important;
+}
+
+/* PRIMARY BUTTON */
+.dark-theme .btn-primary {
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+  border: none !important;
+}
+
+/* PRIMARY HOVER / ACTIVE */
+.dark-theme .btn-primary:hover,
+.dark-theme .btn-primary:focus,
+.dark-theme .btn-primary:active {
+  background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+}
+
+/* DANGER BUTTON */
+.dark-theme .btn-danger {
+  background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+}
+
+.dark-theme .btn-danger,
+.dark-theme .btn-danger * {
+  color: #ffffff !important;
+}
+
+/* SUCCESS BUTTON */
+.dark-theme .btn-success {
+  background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+}
+
+/* ICON FIX (FontAwesome) */
+.dark-theme .btn i {
+  color: inherit !important;
+}
+
+/* LINK BUTTON FIX */
+.dark-theme a.btn {
+  color: inherit !important;
+  text-decoration: none;
+}
+
+
+/* =========================================
+   DARK THEME – ABSOLUTE BUTTON FIX
+========================================= */
+
+/* Base button text */
+body.dark-theme .btn,
+body.dark-theme .btn span,
+body.dark-theme .btn i,
+body.dark-theme .btn a {
+    color: #020617 !important;
+}
+
+/* PRIMARY BUTTON */
+body.dark-theme .btn.btn-primary {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    border: none !important;
+}
+
+/* PRIMARY HOVER / ACTIVE / FOCUS */
+body.dark-theme .btn.btn-primary:hover,
+body.dark-theme .btn.btn-primary:focus,
+body.dark-theme .btn.btn-primary:active {
+    background: linear-gradient(135deg, #0ea5e9, #38bdf8) !important;
+}
+
+/* FORCE TEXT COLOR ON HOVER (this is the key fix) */
+body.dark-theme .btn.btn-primary:hover *,
+body.dark-theme .btn.btn-primary:focus *,
+body.dark-theme .btn.btn-primary:active * {
+    color: #020617 !important;
+}
+
+/* DANGER BUTTON */
+body.dark-theme .btn.btn-danger {
+    background: linear-gradient(135deg, #ef4444, #dc2626) !important;
+    border: none !important;
+}
+
+body.dark-theme .btn.btn-danger *,
+body.dark-theme .btn.btn-danger:hover * {
+    color: #ffffff !important;
+}
+
+/* SUCCESS BUTTON */
+body.dark-theme .btn.btn-success {
+    background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+    border: none !important;
+}
+
+body.dark-theme .btn.btn-success *,
+body.dark-theme .btn.btn-success:hover * {
+    color: #020617 !important;
+}
+
+/* ANCHOR BUTTON FIX (Bootstrap overrides this) */
+body.dark-theme a.btn,
+body.dark-theme a.btn:hover {
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+
+
+/* =========================================
+   DARK THEME – CATEGORY SIDEBAR TEXT FIX
+   (Product Page)
+========================================= */
+
+/* Base category text */
+.dark-theme .list-group-item,
+.dark-theme .list-group-item a {
+  color: #e5e7eb !important;
+  font-weight: 500;
+}
+
+/* Hover */
+.dark-theme .list-group-item:hover,
+.dark-theme .list-group-item:hover a {
+  color: #020617 !important;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+}
+
+/* Active category */
+.dark-theme .list-group-item.active,
+.dark-theme .list-group-item.active a {
+  color: #020617 !important;
+  background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+  border: none;
+}
+
+/* Prevent button rules from leaking */
+.dark-theme .list-group-item.btn,
+.dark-theme .list-group-item.btn * {
+  color: #e5e7eb !important;
+}
+
+
+/* =================================================
+   DARK THEME – CATEGORY SIDEBAR NUCLEAR RESET
+   (Overrides ALL button & anchor rules)
+================================================= */
+
+/* Reset EVERYTHING inside category sidebar */
+body.dark-theme .list-group,
+body.dark-theme .list-group * {
+    color: #e5e7eb !important;
+}
+
+/* Individual category items */
+body.dark-theme .list-group-item {
+    background-color: #020617 !important;
+    border: 1px solid #1e293b !important;
+    color: #e5e7eb !important;
+    font-weight: 500;
+}
+
+/* Links inside category */
+body.dark-theme .list-group-item a {
+    color: #e5e7eb !important;
+    text-decoration: none !important;
+}
+
+/* Hover state */
+body.dark-theme .list-group-item:hover,
+body.dark-theme .list-group-item:hover a {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    color: #020617 !important;
+}
+
+/* Active state */
+body.dark-theme .list-group-item.active,
+body.dark-theme .list-group-item.active a {
+    background: linear-gradient(135deg, #38bdf8, #0ea5e9) !important;
+    color: #020617 !important;
+    border: none !important;
+}
+
+/* HARD BLOCK button rules */
+body.dark-theme .list-group-item.btn,
+body.dark-theme .list-group-item.btn *,
+body.dark-theme .list-group-item a.btn,
+body.dark-theme .list-group-item a.btn * {
+    color: #e5e7eb !important;
+    background: inherit !important;
+}
